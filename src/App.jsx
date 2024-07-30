@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import ProductCart from "./Components/ProductCart";
 
@@ -35,12 +36,54 @@ function App() {
     },
   ];
 
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const productInCart = prevCart.find(
+        (item) => item.productName === product.productName
+      );
+      if (productInCart) {
+        return prevCart.map((item) =>
+          item.productName === product.productName
+            ? { ...item, count: item.count + 1 }
+            : item
+        );
+      } else {
+        return [...prevCart, { ...product, count: 1 }];
+      }
+    });
+  };
+
+  const totalCount = cart.reduce((acc, item) => acc + item.count, 0);
+
   return (
     <>
-      <div>
-        {products.map((products, index) => (
-          <ProductCart key={index} product={products}></ProductCart>
-        ))}
+      {/* cart */}
+      <div className="mt-8 p-4 border-b border-gray-300 flex flex-col items-center">
+        <h2 className="text-3xl font-bold mb-4">Added cart</h2>
+        <h2 className="font-bold">Total Cart Added: {totalCount}</h2>
+        {cart.length > 0 ? (
+          cart.map((item, index) => (
+            <div key={index} className="flex justify-between mb-2">
+              {item.productName} x {item.count}
+            </div>
+          ))
+        ) : (
+          <div>No cart added yet</div>
+        )}
+      </div>
+      <div className="container mx-auto p-4">
+        {/* product */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.map((products, index) => (
+            <ProductCart
+              key={index}
+              products={products}
+              addToCart={addToCart}
+            ></ProductCart>
+          ))}
+        </div>
       </div>
     </>
   );
