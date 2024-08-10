@@ -2,7 +2,6 @@ import { memo } from "react";
 
 /* eslint-disable react/prop-types */
 const ProductCart = ({ product, addToCart }) => {
-  console.log(`${product.productName} rendered`)
   const { productName, price, img } = product;
   return (
     <div className="border rounded-lg shadow-lg p-4 flex flex-col items-center">
