@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import "./App.css";
 import ProductCart from "./Components/ProductCart";
+import CartDisplay from "./Components/CartDisplay";
 
 function App() {
   const products = [
@@ -45,7 +46,7 @@ function App() {
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
 
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     setCart((prevCart) => {
       const productInCart = prevCart.find((item) => item.id === product.id);
       if (productInCart) {
@@ -56,10 +57,10 @@ function App() {
         return [...prevCart, { ...product, count: 1 }];
       }
     });
-  };
+  }, []);
 
-  const totalCount = cart.reduce((acc, item) => acc + item.count, 0);
-  console.log(totalCount)
+  const totalCount = useMemo(() => cart.reduce((acc, item) => acc + item.count, 0), [cart]);
+
   return (
     <>
       <div className="mt-8 p-4 border-b border-gray-300 flex flex-col items-center">
@@ -70,19 +71,7 @@ function App() {
         >
           Cart ({totalCount})
         </button>
-        {showCart && (
-          <div className="mt-4">
-            {cart.length > 0 ? (
-              cart.map((item) => (
-                <div key={item.id} className="flex justify-between mb-2">
-                  {item.productName} x {item.count}
-                </div>
-              ))
-            ) : (
-              <div>No cart added yet</div>
-            )}
-          </div>
-        )}
+        {showCart && <CartDisplay cart={cart} />}
       </div>
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
