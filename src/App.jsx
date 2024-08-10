@@ -59,7 +59,7 @@ function App() {
   };
 
   const totalCount = cart.reduce((acc, item) => acc + item.count, 0);
-
+  console.log(totalCount)
   return (
     <>
       <div className="mt-8 p-4 border-b border-gray-300 flex flex-col items-center">
